@@ -1,0 +1,144 @@
+﻿@model ML.Producto
+@{
+    ViewData["Title"] = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <h5>Formulario de Usuarios</h5>
+    <h3>@ViewBag.Titulo</h3>
+    <p>Ingrese los datos solicitados</p>
+    <hr />
+
+    @using(Html.BeginForm("Form", "Producto", FormMethod.Post, new{enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            @Html.LabelFor(model => model.IdProducto, new{@class = "control-label col-md-2 visually-hidden"})
+            @Html.TextBoxFor(model => model.IdProducto, new{@class = "form-control visually-hidden", @readonly = true})
+            @Html.ValidationMessageFor(model => model.IdProducto)
+        </div>
+
+        <div class="row">
+            <h4>Datos del Producto</h4>
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.Nombre, new{@class="control-label col-md-2"})
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.Nombre, new{@class="form-control"})
+                    @Html.ValidationMessageFor(model => model.Nombre)
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                @Html.LabelFor(model => model.PrecioUnitario, new{@class="control-label col-md-2"})
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.PrecioUnitario, new{@class="form-control"})
+                    @Html.ValidationMessageFor(model => model.PrecioUnitario)
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                @Html.LabelFor(model => model.Stock, new{@class="control-label col-md-2"})
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.Stock, new{@class="form-control"})
+                    @Html.ValidationMessageFor(model => model.Stock)
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.Descripcion, new{@class="control-label col-md-2"})
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.Descripcion, new{@class="form-control"})
+                    @Html.ValidationMessageFor(model => model.Descripcion)
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-6">
+                <h4>Datos del proveedor</h4>
+            </div>
+            <div class="col-6">
+                <h4>Datos del departamento</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                @Html.LabelFor(model => model.Proveedor.IdProveedor, new{@class="control-label col-md-2"})
+                <div class="input-group">
+                    @Html.TextBoxFor(model=> model.Proveedor.IdProveedor, new{@class="form-control"})
+                    @Html.ValidationMessageFor(model => model.Proveedor.IdProveedor)
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                @Html.LabelFor(model => model.Proveedor.Telefono, new{@class="control-label col-md-2"})
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.Proveedor.Telefono, new{@class="form-control"})
+                    @Html.ValidationMessageFor(model => model.Proveedor.Telefono)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <h4>Datos del Area y Departamento</h4>
+            <div class="col-md-2">
+                @Html.LabelFor(model => model.Departamento.Area, new{@class="control-label col-md-2"})
+                <div class="input-group">
+                    @Html.DropDownListFor(model => model.Departamento.Area.IdArea, new SelectList(Model.Departamento.Area.Areas, "IdArea", "Nombre"), "Selecciona una opción", new{@class="form-control", @id="ddlArea"})
+                    @Html.ValidationMessageFor(model => model.Departamento.Area.IdArea)
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.Departamento, new{@class="control-label col-md-2"})
+                <div class="input-group">
+                    @if(Model.Departamento.Departamentos == null || Model.Departamento.Departamentos.Count == 0)
+                    {
+                        @Html.DropDownListFor(model => model.Departamento.IdDepartamento, new SelectList(string.Empty, "Value", "Text"), "Selecciona una opcion", new{@class="form-control", @id="ddlDepartamento"})
+                        @Html.ValidationMessageFor(model => model.Departamento.IdDepartamento)
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(model => model.Departamento.IdDepartamento, new SelectList(Model.Departamento.Departamentos, "IdDepartamento", "Nombre"),"Selecciona una opción", new{@class="form-control", @id="ddlDepartamento"})
+                        @Html.ValidationMessageFor(model => model.Departamento.IdDepartamento)
+                    }
+                    
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#ddlArea").change(function(){
+                $("#ddlDepartamento").empty();
+                $.ajax({
+                    type:'GET',
+                    url: '@Url.Action("GetDepartamentos")',
+                    dataType: 'json',
+                    success: function(departamentos){
+                        $("#ddlDepartamento").append('<option value="0">' + 'Seleccione una opcion' + '</option>');
+                        $.each(departamentos, function (i, departamentos){
+                            $("#ddlDepartamento").append('<option value="'
+                            + departamentos.idDepartamento + '">'
+                            + departamentos.nombre + '</option>');
+                        });
+                    },
+                    error: function(ex){
+                        $("#ddlDepartamento").empty();
+                        $("#ddlDepartamento").append('<option value="0">' + 'Seleccione una opcion' + '</option>');
+                    }
+                });
+            });
+        });
+    </script>
+}
+

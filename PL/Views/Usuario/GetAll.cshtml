@@ -1,0 +1,164 @@
+﻿@model ML.Usuario
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <h2>Usuarios</h2> <!-- Nombre que aparecera en la vista como texto -->
+    <!-- Instrucciones, es importante ponerlas siempre -->
+    <p>Modulo de Usuarios </p>
+    <p>Boton verde: Permite agregar un nuevo usuario </p>
+    <p>Boton amarillo: Permite modificar la informacion de un usuario existente </p>
+    <p>Boton rojo: Permite eliminar toda la informacion de una materia existente </p>
+
+    <div>
+        @Html.ActionLink("Agregar", "Form", "Usuario", new { area = "" }, new { @class = "btn btn-success" })
+    </div>
+    <br />
+     @using (Html.BeginForm("GetAll", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" })) //BeginForm se encarga de encapsular la informacion.
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.Nombre, new{@class="form-control", placeholder = "Nombre"})
+            </div>
+
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.ApellidoPaterno, new{@class="form-control",  placeholder = "Apellido Paterno"})
+            </div>
+
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.ApellidoMaterno, new{@class="form-control",  placeholder = "Apellido Paterno"})
+            </div>
+            
+            <div class="col-md-3">
+                <input type="submit" value="Buscar" class="btn btn-info" />
+            </div>
+        
+        </div>
+    }
+
+
+    @if (Model.Usuarios != null)
+    {
+        <div class="container">
+        <div class="row">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Editar</th>
+                        <th scope="col" class="visually-hidden">IdUsuario</th>
+                        <th scope="col">UserName</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">ApellidoPaterno</th>
+                        <th scope="col">ApellidoMaterno</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Password</th>
+                        <th scope="col">FechaNacimiento</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Telefono</th>
+                        <th scope="col">Celular</th>
+                        <th scope="col">CURP</th>
+                        <th scope="col">Imagen</th>
+                        <th scope="col" class="visually-hidden">IdRol</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col" class="visually-hidden">IdDireccion</th>
+                        <th scope="col">Calle</th>
+                        <th scope="col">NumeroInterior</th>
+                        <th scope="col">NumeroExterior</th>
+                        <th scope="col" class="visually-hidden">IdColonia</th>
+                        <th scope="col">Colonia</th>
+                        <th scope="col">CodigoPostal</th>
+                        <th scope="col" class="visually-hidden">IdMunicipio</th>
+                        <th scope="col">Municipio</th>
+                        <th scope="col" class="visually-hidden">IdEstado</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col" class="visually-hidden">IdPais</th>
+                        <th scope="col">Pais</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ML.Usuario usuario in Model.Usuarios)
+                    {
+                        <tr class="table-active">
+
+                            <td class="table-active"><a class="btn btn-warning bi bi-pencil" href="@Url.Action("Form", "Usuario", new {IdUsuario = usuario.IdUsuario})"></a></td>
+                            <td class="table-active visually-hidden">@usuario.IdUsuario</td>
+                            <td class="table-active">@usuario.UserName</td>
+                            <td class="table-active">@usuario.Nombre</td>
+                            <td class="table-active">@usuario.ApellidoPaterno</td>
+                            <td class="table-active">@usuario.ApellidoMaterno</td>
+                            <td class="table-active">@usuario.Email</td>
+                            <td class="table-active">@usuario.Password</td>
+                            <td class="table-active">@usuario.FechaNacimiento</td>
+                            <td class="table-active">@usuario.Sexo</td>
+                            <td class="table-active">@usuario.Telefono</td>
+                            <td class="table-active">@usuario.Celular</td>
+                            <td class="table-active">@usuario.CURP</td>
+                                <td class="table-active">@if (@usuario.Imagen == null || @usuario.Imagen == "")
+                                    {
+                                        <img src="~/Imagenes/usuario-default.jpg" width="80" height="80" />
+                                    }
+                                    else
+                                    {
+                                        <img src="data:image/png;base64, @usuario.Imagen" width="80" height="80"/>
+                                    }
+                                </td>
+                                <td class="table-active visually-hidden">@usuario.Rol.IdRol</td>
+                            <td class="table-active">@usuario.Rol.Nombre</td>
+                            <td class="table-active visually-hidden">@usuario.Direccion.IdDireccion</td>
+                            <td class="table-active">@usuario.Direccion.Calle</td>
+                            <td class="table-active">@usuario.Direccion.NumeroInterior</td>
+                            <td class="table-active">@usuario.Direccion.NumeroExterior</td>
+                            <td class="table-active visually-hidden">@usuario.Direccion.Colonia.IdColonia</td>
+                            <td class="table-active">@usuario.Direccion.Colonia.Nombre</td>
+                            <td class="table-active">@usuario.Direccion.Colonia.CodigoPostal</td>
+                            <td class="table-active visually-hidden">@usuario.Direccion.Colonia.Municipio.IdMunicipio</td>
+                            <td class="table-active">@usuario.Direccion.Colonia.Municipio.Nombre</td>
+                            <td class="table-active visually-hidden">@usuario.Direccion.Colonia.Municipio.Estado.IdEstado</td>
+                            <td class="table-active">@usuario.Direccion.Colonia.Municipio.Estado.Nombre</td>
+                            <td class="table-active visually-hidden">@usuario.Direccion.Colonia.Municipio.Estado.Pais.IdPais</td>
+                            <td class="table-active">@usuario.Direccion.Colonia.Municipio.Estado.Pais.Nombre</td>
+                                @if(usuario.Status == true)
+                                    {
+                                        <td class="table-active">
+                                            <div class="form-check form-switch"><input type="checkbox" class="form-check-input" onclick="CambiarStatus(this.checked, @usuario.IdUsuario)" checked /></div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="table-active">
+                                            <div class="form-check form-switch"><input type="checkbox" class="form-check-input" onclick="CambiarStatus(this.checked, @usuario.IdUsuario)"/></div>
+                                    </td>
+                                }
+                            <td class="table-active"><a class="btn btn-danger bi bi-trash" href="@Url.Action("Delete", "Usuario", new {IdUsuario = usuario.IdUsuario})" onclick="return confirm('Estas seguro que deseas eliminar estos datos?')"></a></td>
+                        </tr>
+                     }
+                </tbody>
+                </table>
+            </div>
+        </div>
+     }
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+
+    <script type="text/javascript">
+      
+        function CambiarStatus(status, idUsuario){
+            $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CambiarStatus")',
+                    datatype: 'json',
+                    data: {status, idUsuario},
+                    sucess: {},
+                    error: function(ex){
+                        alert('Failed.' + ex);
+                    }
+                });
+        }
+    </script>
+}

@@ -1,0 +1,84 @@
+﻿@model ML.Producto
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>Productos</h2>
+    <p>Modulo de productos.</p>
+    <p>Boton verde: Permite agregar un nuevo producto.</p>
+    <p>Boton amarillo: Permite modificar la informacion de un producto existente.</p>
+    <p>Boton rojo: Permite eliminar toda la informacion un producto existente.</p>
+
+    <div>
+        @Html.ActionLink("Agregar", "Form", "Producto", new {area = ""}, new { @class = "btn btn-success"})
+    </div>
+    <br />
+     @using (Html.BeginForm("GetAll", "Producto", FormMethod.Post, new { enctype = "multipart/form-data" })) //BeginForm se encarga de encapsular la informacion.
+    {
+        <div class="row">
+            <div class="col-4">
+                @Html.TextBoxFor(model => model.Nombre, new{@class="form-control", placeholder="Nombre del Producto"})
+            </div>
+            <div class="col-4">
+                @Html.TextBoxFor(model => model.Departamento.IdDepartamento, new{@class="form-control", placeholder="Id del Departamento"})
+            </div>
+            <div class="col-md-3">
+                <input type="submit" value="Buscar" class="btn btn-info" />
+            </div>
+        </div>
+    }
+
+
+    @if(Model.Productos != null)
+    {
+        <div class="container">
+            <div class="row">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Editar</th>
+                            <th scope="col" class="visually-hidden">IdProducto</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">PrecioUnitario</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col" class="visually-hidden">IdProveedor</th>
+                            <th scope="col">TelefonoProveedor</th>
+                            <th scope="col" class="visually-hidden">IdArea</th>
+                            <th scope="col">NombreArea</th>
+                            <th scope="col" class="visually-hidden">IdDepartamento</th>
+                            <th scope="col">NombreDepartamento</th>
+                            <th scope="col">Descripcion</th>
+                            <th scope="col">Imagen</th>
+                            <th scope="col">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(ML.Producto producto in Model.Productos)
+                        {
+
+                            <tr class="table-active">
+                                <td class="table-active"><a class="btn btn-warning bi bi-pencil" href="@Url.Action("Form", "Producto", new {IdProducto = producto.IdProducto})"></a></td>
+                                <td class="table-active visually-hidden">@producto.IdProducto</td>
+                                <td class="table-active">@producto.Nombre</td>
+                                <td class="table-active">@producto.PrecioUnitario</td>
+                                <td class="table-active">@producto.Stock</td>
+                                <td class="table-active visually-hidden">@producto.Proveedor.IdProveedor</td>
+                                <td class="table-active">@producto.Proveedor.Telefono</td>
+                                <td class="table-active visually-hidden">@producto.Departamento.Area.IdArea</td>
+                                <td class="table-active">@producto.Departamento.Area.Nombre</td>
+                                <td class="table-active visually-hidden">@producto.Departamento.IdDepartamento</td>
+                                <td class="table-active">@producto.Departamento.Nombre</td>
+                                <td class="table-active">@producto.Descripcion</td>
+                                <td class="table-active">@producto.Imagen</td>
+                                <td class="table-active"><a class="btn btn-danger bi bi-trash" href="@Url.Action("Delete", "Producto", new {IdProducto = producto.IdProducto})" onclick="return confirm('Estas seguro que deseas eliminar los datos?')"></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
